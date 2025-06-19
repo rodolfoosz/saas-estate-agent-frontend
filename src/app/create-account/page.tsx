@@ -1,4 +1,3 @@
-// Atualizado para layout refinado com imagem à esquerda
 import Image from 'next/image'
 import CreateAccount from '@/components/CreateAccount'
 
