@@ -7,8 +7,9 @@ import AuthLogo from '@/components/Login/AuthLogo'
 import AuthInput from '@/components/Login/AuthInput'
 import AuthLinks from '@/components/Login/AuthLinks'
 import AuthImage from '@/components/Login/AuthImage'
-import { loginUser } from '@/services/api'
 import { useRouter } from 'next/navigation'
+import { LoginPayload } from '@/types/loginPayload'
+import { loginUser } from '@/services/login.service'
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -25,13 +26,13 @@ export default function LoginPage() {
 
   const router = useRouter()
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: LoginPayload) => {
     try {
       const response = await loginUser({ email: data.email, password: data.password })
       localStorage.setItem('token', response.access_token)
       router.push('/dashboard')
     } catch (err) {
-      alert('E-mail ou senha inválidos.')
+      console.error('Erro ao fazer login:', err);
     }
   }
 

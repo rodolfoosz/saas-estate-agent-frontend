@@ -1,7 +1,7 @@
 'use client'
 
 import { formatCpf, formatPhone } from "@/app/utils/formatters"
-import { createAccount } from "@/services/user.service.ts"
+import { createAccount } from "@/services/user.service"
 import { CreateAccountFormData } from "@/types/user"
 import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
@@ -53,13 +53,8 @@ export default function CreateAccount() {
       await createAccount(formData)
       alert("Conta criada com sucesso!")
       setFormData(initialFormData)
-    } catch (err: any) {
+    } catch (err) {
       console.error('Erro ao criar conta:', err)
-      if (err.response?.data?.message) {
-        alert(`Erro: ${err.response.data.message}`)
-      } else {
-        alert("Erro inesperado ao criar conta.")
-      }
     }
   }
 
