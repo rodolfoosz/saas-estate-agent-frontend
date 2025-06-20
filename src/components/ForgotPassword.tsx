@@ -22,6 +22,7 @@ const ForgotPassword: React.FC = () => {
       setSubmitted(true);
     } catch (err) {
       setError('Erro ao enviar solicitação. Tente novamente.');
+      console.log(err);
     }
   };
 
