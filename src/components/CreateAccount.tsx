@@ -1,7 +1,7 @@
 'use client'
 
 import { formatCpf, formatPhone } from "@/app/utils/formatters"
-import { createAccount } from "@/services/userService"
+import { createAccount } from "@/services/user.service.ts"
 import { CreateAccountFormData } from "@/types/user"
 import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
