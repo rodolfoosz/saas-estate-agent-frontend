@@ -7,9 +7,11 @@ import AuthLogo from '@/components/Login/AuthLogo'
 import AuthInput from '@/components/Login/AuthInput'
 import AuthLinks from '@/components/Login/AuthLinks'
 import AuthImage from '@/components/Login/AuthImage'
+import { loginUser } from '@/services/api'
+import { useRouter } from 'next/navigation'
 
 const loginSchema = z.object({
-  username: z.string().min(1, 'Usuário obrigatório'),
+  email: z.string().email('E-mail inválido'),
   password: z.string().min(1, 'Senha obrigatória'),
   remember: z.boolean().optional(),
 })
@@ -21,8 +23,16 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) })
 
-  const onSubmit = (data: any) => {
-    console.log(data)
+  const router = useRouter()
+
+  const onSubmit = async (data: any) => {
+    try {
+      const response = await loginUser({ email: data.email, password: data.password })
+      localStorage.setItem('token', response.access_token)
+      router.push('/dashboard')
+    } catch (err) {
+      alert('E-mail ou senha inválidos.')
+    }
   }
 
   return (
@@ -33,8 +43,8 @@ export default function LoginPage() {
           <AuthInput
             label="Usuário"
             icon="user"
-            error={errors.username?.message}
-            {...register('username')}
+            error={errors.email?.message}
+            {...register('email')}
           />
           <AuthInput
             label="Senha"
