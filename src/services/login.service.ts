@@ -1,4 +1,4 @@
-import { LoginPayload } from "@/types/loginpayload"
+import { LoginPayload } from "@/types/loginPayload";
 import api from "./api"
 
 export async function loginUser(data: LoginPayload) {
