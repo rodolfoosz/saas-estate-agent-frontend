@@ -1,19 +1,11 @@
 'use client'
 
 import { formatCpf, formatPhone } from "@/app/utils/formatters"
+import { createAccount } from "@/services/userService"
+import { CreateAccountFormData } from "@/types/user"
 import { useState } from "react"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
-interface CreateAccountFormData {
-  fullName: string
-  email: string
-  cpf: string
-  birthDate: string
-  phone: string
-  password: string
-  confirmPassword: string
-  address: string
-}
 
 const initialFormData: CreateAccountFormData = {
   fullName: "",
@@ -37,7 +29,6 @@ export default function CreateAccount() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-
   const validate = () => {
     const newErrors: { [key: string]: string } = {}
     if (!formData.fullName) newErrors.fullName = "Nome completo é obrigatório"
@@ -54,18 +45,27 @@ export default function CreateAccount() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (validate()) {
+    if (!validate()) return
+
+    try {
+      await createAccount(formData)
       alert("Conta criada com sucesso!")
       setFormData(initialFormData)
+    } catch (err: any) {
+      console.error('Erro ao criar conta:', err)
+      if (err.response?.data?.message) {
+        alert(`Erro: ${err.response.data.message}`)
+      } else {
+        alert("Erro inesperado ao criar conta.")
+      }
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="w-full space-y-8">
-      <div className="flex flex-wrap gap-x-6 gap-y-6">
-        {/* Campo: Nome completo */}
+      <div className="flex flex-wrap gap-x-4 gap-y-6">
         <div className="flex-1 min-w-[220px]">
           <label className="block text-sm font-medium text-gray-900">Nome completo</label>
           <input
@@ -73,11 +73,10 @@ export default function CreateAccount() {
             type="text"
             value={formData.fullName}
             onChange={handleChange}
-            className="mt-1 w-full rounded-md border border-gray-300 text-gray-700 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-white text-gray-800 placeholder-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
-        {/* Campo: Email */}
         <div className="flex-1 min-w-[220px]">
           <label className="block text-sm font-medium text-gray-900">Email</label>
           <input
@@ -85,11 +84,10 @@ export default function CreateAccount() {
             type="email"
             value={formData.email}
             onChange={handleChange}
-            className="mt-1 w-full rounded-md border text-gray-700 border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-white text-gray-800 placeholder-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
-        {/* Campo: CPF */}
         <div className="flex-1 min-w-[220px]">
           <label className="block text-sm font-medium text-gray-900">CPF</label>
           <input
@@ -97,13 +95,12 @@ export default function CreateAccount() {
             type="text"
             maxLength={14}
             placeholder="000.000.000-00"
-            value={formatCpf( formData.cpf)}
+            value={formatCpf(formData.cpf)}
             onChange={handleChange}
-            className="mt-1 w-full rounded-md border text-gray-700 border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-white text-gray-800 placeholder-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
-        {/* Campo: Data de nascimento */}
         <div className="flex-1 min-w-[220px]">
           <label className="block text-sm font-medium text-gray-900">Data de nascimento</label>
           <input
@@ -111,11 +108,10 @@ export default function CreateAccount() {
             type="date"
             value={formData.birthDate}
             onChange={handleChange}
-            className="mt-1 w-full rounded-md border text-gray-700 border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
-        {/* Campo: Telefone */}
         <div className="flex-1 min-w-[220px]">
           <label className="block text-sm font-medium text-gray-900">Telefone</label>
           <input
@@ -124,11 +120,10 @@ export default function CreateAccount() {
             placeholder="(99) 99999-9999"
             value={formatPhone(formData.phone)}
             onChange={handleChange}
-            className="mt-1 w-full rounded-md border text-gray-700 border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-white text-gray-800 placeholder-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
-        {/* Campo: Endereço */}
         <div className="flex-1 min-w-[220px]">
           <label className="block text-sm font-medium text-gray-900">Endereço</label>
           <input
@@ -136,45 +131,44 @@ export default function CreateAccount() {
             type="text"
             value={formData.address}
             onChange={handleChange}
-            className="mt-1 w-full rounded-md border text-gray-700 border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 bg-white text-gray-800 placeholder-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
         <div className="relative flex-1 min-w-[220px]">
-            <label className="block text-sm font-medium text-gray-900">Senha</label>
-            <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-1 w-full pr-10 px-4 py-2 bg-white text-gray-700 placeholder-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-900"
-            >
-                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-            </button>
+          <label className="block text-sm font-medium text-gray-900">Senha</label>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full pl-4 pr-12 py-2 bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-900"
+          >
+            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+          </button>
         </div>
 
-
         <div className="relative flex-1 min-w-[220px]">
-            <label className="block text-sm font-medium text-gray-900">Confirmar Senha</label>
-            <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="mt-1 w-full pr-10 px-4 py-2 bg-white text-gray-700 placeholder-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-900"
-            >
-                {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-            </button>
+          <label className="block text-sm font-medium text-gray-900">Confirmar Senha</label>
+          <input
+            type={showConfirmPassword ? 'text' : 'password'}
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full pl-4 pr-12 py-2 bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-[38px] text-gray-500 hover:text-gray-900"
+          >
+            {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+          </button>
         </div>
       </div>
 
