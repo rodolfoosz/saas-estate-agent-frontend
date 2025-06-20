@@ -30,19 +30,18 @@ export default function CreateAccount() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const validate = () => {
-    const newErrors: { [key: string]: string } = {}
-    if (!formData.fullName) newErrors.fullName = "Nome completo é obrigatório"
-    if (!formData.email) newErrors.email = "Email é obrigatório"
-    if (!formData.cpf) newErrors.cpf = "CPF é obrigatório"
-    if (!formData.birthDate) newErrors.birthDate = "Data de nascimento é obrigatória"
-    if (!formData.phone) newErrors.phone = "Telefone é obrigatório"
-    if (!formData.address) newErrors.address = "Endereço é obrigatório"
-    if (!formData.password) newErrors.password = "Senha é obrigatória"
+    if (!formData.fullName) errors.fullName = "Nome completo é obrigatório"
+    if (!formData.email) errors.email = "Email é obrigatório"
+    if (!formData.cpf) errors.cpf = "CPF é obrigatório"
+    if (!formData.birthDate) errors.birthDate = "Data de nascimento é obrigatória"
+    if (!formData.phone) errors.phone = "Telefone é obrigatório"
+    if (!formData.address) errors.address = "Endereço é obrigatório"
+    if (!formData.password) errors.password = "Senha é obrigatória"
     if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "As senhas não coincidem"
+      errors.confirmPassword = "As senhas não coincidem"
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    setErrors(errors)
+    return Object.keys(errors).length === 0
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
