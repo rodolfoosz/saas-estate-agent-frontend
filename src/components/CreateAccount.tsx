@@ -3,6 +3,7 @@
 import { formatCpf, formatPhone } from "@/app/utils/formatters"
 import { createAccount } from "@/services/user.service"
 import { CreateAccountFormData } from "@/types/user"
+import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import toast from "react-hot-toast"
@@ -57,9 +58,13 @@ export default function CreateAccount() {
       await createAccount(formData)
       toast.success('Conta criada com sucesso!')
       router.push('/sucesso')
-    } catch (err: any) {
-      console.error(err)
-      const msg = err?.response?.data?.message || 'Erro ao criar conta.'
+    } catch (err: unknown) {
+      let msg = 'Erro ao criar conta.'
+
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        msg = err.response.data.message
+      }
+
       toast.error(msg)
     } finally {
       setLoading(false)
