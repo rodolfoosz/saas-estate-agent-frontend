@@ -3,7 +3,9 @@
 import { formatCpf, formatPhone } from "@/app/utils/formatters"
 import { createAccount } from "@/services/user.service"
 import { CreateAccountFormData } from "@/types/user"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
+import toast from "react-hot-toast"
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 
@@ -19,8 +21,10 @@ const initialFormData: CreateAccountFormData = {
 }
 
 export default function CreateAccount() {
-  const [formData, setFormData] = useState(initialFormData)
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState(false);
+    const router = useRouter()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -48,12 +52,17 @@ export default function CreateAccount() {
     e.preventDefault()
     if (!validate()) return
 
+    setLoading(true)
     try {
       await createAccount(formData)
-      alert("Conta criada com sucesso!")
-      setFormData(initialFormData)
-    } catch (err) {
-      console.error('Erro ao criar conta:', err)
+      toast.success('Conta criada com sucesso!')
+      router.push('/sucesso')
+    } catch (err: any) {
+      console.error(err)
+      const msg = err?.response?.data?.message || 'Erro ao criar conta.'
+      toast.error(msg)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -169,9 +178,10 @@ export default function CreateAccount() {
       <div className="flex justify-center">
         <button
           type="submit"
-          className="w-full bg-gray-800 text-white py-2 rounded-md hover:bg-gray-700"
+          disabled={loading}
+          className="w-full bg-gray-800 text-white py-2 rounded-md hover:bg-gray-700 disabled:opacity-50"
         >
-          Criar Conta
+          {loading ? 'Criando conta...' : 'Criar Conta'}
         </button>
       </div>
     </form>
