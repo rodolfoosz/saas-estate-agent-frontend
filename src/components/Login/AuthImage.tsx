@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export default function AuthImage() {
   return (
-    <div className="w-1/2 relative hidden md:block">
+    <div className="hidden md:block md:w-1/2 relative">
       <Image
         src="/login-background.png"
         alt="Imagem de fundo login"
