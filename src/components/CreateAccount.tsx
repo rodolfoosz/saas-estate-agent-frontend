@@ -3,7 +3,7 @@
 import { formatCpf, formatPhone } from "@/app/utils/formatters"
 import { createAccount } from "@/services/user.service"
 import { CreateAccountFormData } from "@/types/user"
-import axios from "axios"
+import axios, { isAxiosError } from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import toast from "react-hot-toast"
@@ -49,27 +49,28 @@ export default function CreateAccount() {
     return Object.keys(errors).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validate()) return
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  if (!validate()) return
 
-    setLoading(true)
-    try {
-      await createAccount(formData)
-      toast.success('Conta criada com sucesso!')
-      router.push('/sucesso')
-    } catch (err: unknown) {
-      let msg = 'Erro ao criar conta.'
+  setLoading(true)
+  try {
+    await createAccount(formData)
+    toast.success('Conta criada com sucesso!')
+    router.push('/sucesso')
+  } catch (err) {
+    let msg = 'Erro ao criar conta.'
 
-      if (axios.isAxiosError(err) && err.response?.data?.message) {
-        msg = err.response.data.message
-      }
-
-      toast.error(msg)
-    } finally {
-      setLoading(false)
+    console.log('ERROR: ----', err);
+    if (isAxiosError(err) && err.response?.data?.message) {
+      msg = err.response.data.message
     }
+
+    toast.error(msg)
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <form onSubmit={handleSubmit} className="w-full space-y-8">
