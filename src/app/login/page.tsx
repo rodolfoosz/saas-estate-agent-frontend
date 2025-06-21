@@ -37,7 +37,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row">
       <div className="w-1/2 flex flex-col justify-center items-center p-10 bg-white">
         <AuthLogo />
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm">
