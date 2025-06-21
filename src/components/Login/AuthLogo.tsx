@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AuthLogo() {
   return (
-    <div className="relative hidden md:block">
+    <div className="relative block text-center mb-6">
       <Image
         src="/logo-casae.png"
         alt="Logo Casaé"

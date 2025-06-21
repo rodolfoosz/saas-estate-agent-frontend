@@ -3,13 +3,12 @@ import Image from 'next/image'
 
 export default function AuthImage() {
   return (
-    <div className="hidden md:block md:w-1/2 relative">
+    <div className="relative h-full w-full">
       <Image
         src="/login-background.png"
         alt="Imagem de fundo login"
         fill
-        style={{ objectFit: 'cover' }}
-        className="brightness-95"
+        className="object-cover brightness-95"
       />
     </div>
   )
