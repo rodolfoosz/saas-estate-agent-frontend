@@ -3,7 +3,7 @@
 import { formatCpf, formatPhone } from "@/app/utils/formatters"
 import { createAccount } from "@/services/user.service"
 import { CreateAccountFormData } from "@/types/user"
-import axios, { isAxiosError } from "axios"
+import { isAxiosError } from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import toast from "react-hot-toast"
