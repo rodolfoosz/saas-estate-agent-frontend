@@ -32,7 +32,11 @@ export function ResetPasswordPage() {
     } catch (err: any) {
       setModalType('error')
       setModalTitle('Erro')
-      setModalMessage(err?.response?.data?.message || 'Erro ao redefinir senha.')
+      setModalMessage(
+        Array.isArray(err?.response?.data?.message)
+            ? err.response.data.message.join(', ')
+            : err?.response?.data?.message || 'Erro ao redefinir senha.'
+      )
       setShowModal(true)
     } finally {
       setIsLoading(false)
