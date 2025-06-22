@@ -1,42 +1,50 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
+import { requestPasswordReset } from '@domains/auth/services/requestPasswordReset.service'
+import FeedbackHttpModal from '@shared/components/Modal/FeedbackHttpModal'
+import React, { useState } from 'react'
 
 const ForgotPasswordComponent: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState('')
+  const [showModal, setShowModal] = useState(false)
+  const [modalType, setModalType] = useState<'success' | 'error'>('success')
+  const [modalTitle, setModalTitle] = useState('')
+  const [modalMessage, setModalMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSubmitted(false);
+    e.preventDefault()
 
     if (!email) {
-      setError('Por favor, informe seu e-mail.');
-      return;
+      setModalType('error')
+      setModalTitle('Erro')
+      setModalMessage('Por favor, informe seu e-mail.')
+      setShowModal(true)
+      return
     }
 
     try {
-      // await api.post('/forgot-password', { email });
-      setSubmitted(true);
-    } catch (err) {
-      setError('Erro ao enviar solicitação. Tente novamente.');
-      console.log(err);
+      await requestPasswordReset(email)
+      setModalType('success')
+      setModalTitle('E-mail enviado')
+      setModalMessage(
+        'Se o e-mail informado estiver cadastrado, você receberá as instruções para redefinir sua senha.'
+      )
+    } catch (err: any) {
+      setModalType('error')
+      setModalTitle('Erro ao enviar')
+      setModalMessage(err?.response?.data?.message || 'Erro ao enviar solicitação. Tente novamente.')
+    } finally {
+      setShowModal(true)
     }
-  };
+  }
 
   return (
-    <div className="w-full max-w-sm mx-auto bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-center text-gray-800 mb-4">
-        Esqueci minha senha
-      </h2>
+    <>
+      <div className="w-full max-w-sm mx-auto bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-semibold text-center text-gray-800 mb-4">
+          Esqueci minha senha
+        </h2>
 
-      {submitted ? (
-        <p className="text-center text-gray-600">
-          Se o e-mail informado estiver cadastrado, você receberá as instruções para redefinir sua senha.
-        </p>
-      ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -46,13 +54,11 @@ const ForgotPasswordComponent: React.FC = () => {
               id="email"
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full pl-4 pr-12 py-2 bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
               required
             />
           </div>
-
-          {error && <p className="text-red-600 text-sm">{error}</p>}
 
           <button
             type="submit"
@@ -61,9 +67,18 @@ const ForgotPasswordComponent: React.FC = () => {
             Enviar
           </button>
         </form>
-      )}
-    </div>
-  );
-};
+      </div>
 
-export default ForgotPasswordComponent;
+      {showModal && (
+        <FeedbackHttpModal
+          type={modalType}
+          title={modalTitle}
+          message={modalMessage}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+    </>
+  )
+}
+
+export default ForgotPasswordComponent

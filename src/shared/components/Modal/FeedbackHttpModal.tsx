@@ -5,8 +5,8 @@ import { FeedbackModalProps } from "@shared/types/props/FeedbackModalProps"
 export default function FeedbackHttpModal({ type, title, message, onClose }: FeedbackModalProps) {
   const isSuccess = type === 'success'
   const textColor = isSuccess ? 'text-green-600' : 'text-red-500'
-  const bgColor = isSuccess ? 'bg-green-600' : 'bg-red-300'
-  const bgHover = isSuccess ? 'hover:bg-green-700' : 'hover:bg-red-700'
+  const bgColor = isSuccess ? 'bg-gray-800' : 'bg-red-300'
+  const bgHover = isSuccess ? 'hover:bg-gray-700' : 'hover:bg-red-700'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
