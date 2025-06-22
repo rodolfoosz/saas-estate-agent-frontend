@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import ForgotPasswordComponent from '../components/ForgotPassword/ForgotPasswordComponent'
+import ForgotPasswordComponent from '../components/ForgotPasswordComponent/ForgotPasswordComponent'
 
 export default function ForgotPassword() {
   return (

@@ -1,6 +1,6 @@
-import ScrollToTop from '@shared/types/ScrollTop'
+import ScrollToTop from '@shared/utils/ScrollTop'
 import Image from 'next/image'
-import CreateAccountComponent from '../components/CreateAccount/CreateAccountComponent'
+import CreateAccountComponent from '../components/CreateAccountComponent/CreateAccountComponent'
 
 export default function CreateAccount() {
   return (

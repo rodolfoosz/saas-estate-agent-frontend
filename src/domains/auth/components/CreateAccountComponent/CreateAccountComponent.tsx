@@ -5,7 +5,7 @@ import { ImSpinner2 } from 'react-icons/im'
 import DelayedLoader from '../../../../shared/components/DelayedLoader'
 import { useCreateAccount } from '@domains/auth/hooks/useCreateAccount'
 import TextInput from '@shared/components/Form/TextInput'
-import { formatCpf, formatPhone } from '@shared/types/formatters'
+import { formatCpf, formatPhone } from '@shared/utils/formatters'
 
 export default function CreateAccountComponent() {
   const {

@@ -8,10 +8,10 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { LoginPayload } from '@domains/auth/types/loginPayload'
 import { loginUser } from '@domains/auth/services/login.service'
-import ScrollToTop from '@shared/types/ScrollTop'
-import AuthLogoComponent from '../components/Login/AuthLogoComponent'
-import AuthInputComponent from '../components/Login/AuthInputComponent'
-import AuthLinksComponent from '../components/Login/AuthLinksComponent'
+import ScrollToTop from '@shared/utils/ScrollTop'
+import AuthLogoComponent from '../components/LoginComponent/AuthLogoComponent'
+import AuthInputComponent from '../components/LoginComponent/AuthInputComponent'
+import AuthLinksComponent from '../components/LoginComponent/AuthLinksComponent'
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
