@@ -2,6 +2,7 @@
 
 import { requestPasswordReset } from '@domains/auth/services/requestPasswordReset.service'
 import FeedbackHttpModal from '@shared/components/Modal/FeedbackHttpModal'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 const ForgotPasswordComponent: React.FC = () => {
@@ -10,6 +11,12 @@ const ForgotPasswordComponent: React.FC = () => {
   const [modalType, setModalType] = useState<'success' | 'error'>('success')
   const [modalTitle, setModalTitle] = useState('')
   const [modalMessage, setModalMessage] = useState('')
+  const router = useRouter()
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    router.push('/auth/login')
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,6 +73,13 @@ const ForgotPasswordComponent: React.FC = () => {
           >
             Enviar
           </button>
+
+          <div className="mt-4 text-center">
+            <span className="text-sm text-gray-600">Lembrou sua senha? </span>
+            <a href="/auth/login" className="text-yellow-500 text-sm hover:underline font-semibold">
+              Voltar para o login
+            </a>
+          </div>
         </form>
       </div>
 
@@ -74,7 +88,7 @@ const ForgotPasswordComponent: React.FC = () => {
           type={modalType}
           title={modalTitle}
           message={modalMessage}
-          onClose={() => setShowModal(false)}
+          onClose={handleCloseModal}
         />
       )}
     </>
