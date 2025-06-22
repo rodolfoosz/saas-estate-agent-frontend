@@ -92,7 +92,6 @@ export const useCreateAccount = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log("HANDLER SUBMIT CHAMADO");
     if (!validate()) return
 
     setLoading(true)
