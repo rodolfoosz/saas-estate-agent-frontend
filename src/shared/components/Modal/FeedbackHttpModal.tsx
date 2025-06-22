@@ -4,7 +4,7 @@ import { FeedbackModalProps } from "@shared/types/props/FeedbackModalProps"
 
 export default function FeedbackHttpModal({ type, title, message, onClose }: FeedbackModalProps) {
   const isSuccess = type === 'success'
-  const textColor = isSuccess ? 'text-green-600' : 'text-red-500'
+  const textColor = isSuccess ? 'text-gray-700' : 'text-red-500'
   const bgColor = isSuccess ? 'bg-gray-800' : 'bg-red-300'
   const bgHover = isSuccess ? 'hover:bg-gray-700' : 'hover:bg-red-700'
 
