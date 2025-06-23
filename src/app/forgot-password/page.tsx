@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import Image from 'next/image'
 import ForgotPassword from '@/components/ForgotPassword'
 
@@ -32,3 +33,14 @@ export default function ForgotPasswordPage() {
     </main>
   )
 }
+=======
+
+import ForgotPassword from '@domains/auth/pages/ForgotPassword'
+import React from 'react'
+
+
+export default function ForgotPasswordPage() {
+  return <ForgotPassword />
+}
+
+>>>>>>> Stashed changes

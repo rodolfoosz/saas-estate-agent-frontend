@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+<<<<<<< Updated upstream
+=======
+import { FeedbackProvider } from "../../context/FeedbackProvider";
+import NavigationLoader from "@shared/components/NavigationLoader";
+>>>>>>> Stashed changes
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +32,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+<<<<<<< Updated upstream
         {children}
+=======
+        <NavigationLoader />
+        <FeedbackProvider>
+          {children}
+        </FeedbackProvider>
+>>>>>>> Stashed changes
       </body>
     </html>
   );
