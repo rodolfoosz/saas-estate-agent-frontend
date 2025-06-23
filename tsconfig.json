@@ -13,13 +13,18 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "types": ["jest", "node"],
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@app/*": ["./src/app/*"],
+      "@domains/*": ["./src/domains/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@context/*": ["./context/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

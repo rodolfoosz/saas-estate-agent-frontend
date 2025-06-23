@@ -2,9 +2,6 @@ import ImovelFeed from "@domains/imovel/components/ImovelFeed";
 import PublicHeader from "@shared/components/PublicHeader";
 
 export default function Home() {
-<<<<<<< Updated upstream
-  redirect("/login");
-=======
   return (
     <>
       <PublicHeader />
@@ -13,5 +10,4 @@ export default function Home() {
       </main>
     </>
   );
->>>>>>> Stashed changes
 }
