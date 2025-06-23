@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { LoginPayload } from '@domains/auth/types/loginPayload'
 import { loginUser } from '@domains/auth/services/login.service'
-import ScrollToTop from '@shared/utils/ScrollTop'
+import ScrollTop from '@shared/components/ScrollTop'
 import AuthLogoComponent from '../components/LoginComponent/AuthLogoComponent'
 import AuthInputComponent from '../components/LoginComponent/AuthInputComponent'
 import AuthLinksComponent from '../components/LoginComponent/AuthLinksComponent'
@@ -40,7 +40,7 @@ export default function Login() {
 
   return (
     <>
-      <ScrollToTop />
+      <ScrollTop />
       <main className="min-h-screen flex">
         <div className="hidden md:flex md:w-1/2 relative">
           <Image

@@ -5,6 +5,7 @@ import { isAxiosError } from 'axios'
 import { CreateAccountFormData } from '@domains/user/types/user'
 import { useFeedback } from '@context/FeedbackProvider'
 import { createAccount } from '@domains/user/services/user.service'
+import { isValidCpf } from '@shared/utils/validate'
 
 const initialFormData: CreateAccountFormData = {
   fullName: '',
@@ -76,13 +77,17 @@ export const useCreateAccount = () => {
 
         if (!formData.fullName) newErrors.fullName = 'Nome completo é obrigatório'
         if (!formData.email) newErrors.email = 'Email é obrigatório'
-        if (!formData.cpf) newErrors.cpf = 'CPF é obrigatório'
         if (!formData.birthDate) newErrors.birthDate = 'Data de nascimento é obrigatória'
         if (!formData.phone) newErrors.phone = 'Telefone é obrigatório'
         if (!formData.address) newErrors.address = 'Endereço é obrigatório'
         if (!formData.password) newErrors.password = 'Senha é obrigatória'
         if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'As senhas não coincidem'
+        }
+        if (!formData.cpf) {
+          newErrors.cpf = 'CPF é obrigatório'
+        } else if (!isValidCpf(formData.cpf)) {
+          newErrors.cpf = 'CPF inválido'
         }
 
         setErrors(newErrors)

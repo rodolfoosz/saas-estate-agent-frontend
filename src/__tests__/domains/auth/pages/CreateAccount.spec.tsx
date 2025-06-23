@@ -4,7 +4,7 @@ import React from 'react'
 
 
 // mocks necessários
-jest.mock('@shared/utils/ScrollTop', () => () => <div data-testid="scroll-to-top" />)
+jest.mock('@shared/components/ScrollTop', () => () => <div data-testid="scroll-to-top" />)
 jest.mock('next/image', () => 'img');
 
 jest.mock('@domains/auth/components/CreateAccountComponent/CreateAccountComponent', () => () => (
@@ -19,7 +19,7 @@ describe('CreateAccount page', () => {
     expect(screen.getByText(/Preencha os campos para começar/)).toBeInTheDocument()
   })
 
-  it('deve renderizar o ScrollToTop', () => {
+  it('deve renderizar o ScrollTop', () => {
     render(<CreateAccount />)
     expect(screen.getByTestId('scroll-to-top')).toBeInTheDocument()
   })

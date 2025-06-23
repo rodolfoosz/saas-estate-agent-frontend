@@ -13,7 +13,7 @@ jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }))
 
-jest.mock('@shared/utils/ScrollTop', () => () => null)
+jest.mock('@shared/components/ScrollTop', () => () => null)
 jest.mock('next/image', () => (props: any) => <img {...props} alt={props.alt || 'image'} />)
 
 jest.mock('@domains/auth/components/LoginComponent/AuthLogoComponent', () => () => (

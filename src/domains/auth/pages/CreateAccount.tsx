@@ -1,11 +1,11 @@
-import ScrollToTop from '@shared/utils/ScrollTop'
 import Image from 'next/image'
 import CreateAccountComponent from '../components/CreateAccountComponent/CreateAccountComponent'
+import ScrollTop from '@shared/components/ScrollTop'
 
 export default function CreateAccount() {
   return (
     <>
-      <ScrollToTop />
+      <ScrollTop />
       <main className="min-h-screen flex">
           <div className="w-1/2 relative hidden md:block">
               <Image
