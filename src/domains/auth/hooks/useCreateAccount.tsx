@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { isAxiosError } from 'axios'
+import { useRouter } from 'next/navigation'
 import { CreateAccountFormData } from '@domains/user/types/user'
 import { useFeedback } from '@context/FeedbackProvider'
 import { createAccount } from '@domains/user/services/user.service'
 import { isValidCpf } from '@shared/utils/validate'
+import { loginUser } from '../services/login.service'
 
 const initialFormData: CreateAccountFormData = {
   fullName: '',
@@ -28,6 +30,7 @@ export const useCreateAccount = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const { showFeedback } = useFeedback()
+  const router = useRouter()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -48,51 +51,43 @@ export const useCreateAccount = () => {
 
     if (rawCep.length === 8) {
       try {
-        const res = await fetch(`https://viacep.com.br/ws/${rawCep}/json/`)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_VIACEP_URL}/${rawCep}/json/`);
         const data = await res.json()
 
         if (data.erro) {
-          showFeedback({
-            type: 'error',
-            title: 'Erro no CEP',
-            message: 'CEP não encontrado.',
-          })
+          showFeedback({ type: 'error', title: 'Erro no CEP', message: 'CEP não encontrado.' })
           return
         }
 
         const enderecoFormatado = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`
         setAddress(enderecoFormatado)
       } catch {
-        showFeedback({
-          type: 'error',
-          title: 'Erro no CEP',
-          message: 'Erro ao buscar endereço.',
-        })
+        showFeedback({ type: 'error', title: 'Erro no CEP', message: 'Erro ao buscar endereço.' })
       }
     }
   }
 
-    const validate = () => {
-        const newErrors: { [key: string]: string } = {}
+  const validate = () => {
+      const newErrors: { [key: string]: string } = {}
 
-        if (!formData.fullName) newErrors.fullName = 'Nome completo é obrigatório'
-        if (!formData.email) newErrors.email = 'Email é obrigatório'
-        if (!formData.birthDate) newErrors.birthDate = 'Data de nascimento é obrigatória'
-        if (!formData.phone) newErrors.phone = 'Telefone é obrigatório'
-        if (!formData.address) newErrors.address = 'Endereço é obrigatório'
-        if (!formData.password) newErrors.password = 'Senha é obrigatória'
-        if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = 'As senhas não coincidem'
-        }
-        if (!formData.cpf) {
-          newErrors.cpf = 'CPF é obrigatório'
-        } else if (!isValidCpf(formData.cpf)) {
-          newErrors.cpf = 'CPF inválido'
-        }
+      if (!formData.fullName) newErrors.fullName = 'Nome completo é obrigatório'
+      if (!formData.email) newErrors.email = 'Email é obrigatório'
+      if (!formData.birthDate) newErrors.birthDate = 'Data de nascimento é obrigatória'
+      if (!formData.phone) newErrors.phone = 'Telefone é obrigatório'
+      if (!formData.address) newErrors.address = 'Endereço é obrigatório'
+      if (!formData.password) newErrors.password = 'Senha é obrigatória'
+      if (formData.password !== formData.confirmPassword) {
+          newErrors.confirmPassword = 'As senhas não coincidem'
+      }
+      if (!formData.cpf) {
+        newErrors.cpf = 'CPF é obrigatório'
+      } else if (!isValidCpf(formData.cpf)) {
+        newErrors.cpf = 'CPF inválido'
+      }
 
-        setErrors(newErrors)
-        return Object.keys(newErrors).length === 0
-    }
+      setErrors(newErrors)
+      return Object.keys(newErrors).length === 0
+  }
 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -102,21 +97,25 @@ export const useCreateAccount = () => {
     setLoading(true)
     try {
       await createAccount(formData)
+
+
+      const response = await loginUser({ email: formData.email, password: formData.password })
+      localStorage.setItem('access_token', response.accessToken)
+
       showFeedback({
         type: 'success',
         title: 'Conta criada com sucesso!',
-        message: 'Você já pode fazer login com seus dados.',
+        message: 'Você foi autenticado automaticamente.',
       })
+      
+      setFormData(initialFormData)
+      router.push('/dashboard')
     } catch (err) {
       let msg = 'Erro ao criar conta.'
       if (isAxiosError(err) && err.response?.data?.message) {
         msg = err.response.data.message
       }
-      showFeedback({
-        type: 'error',
-        title: 'Erro ao criar conta',
-        message: msg,
-      })
+      showFeedback({ type: 'error', title: 'Erro ao criar conta', message: msg })
     } finally {
       setLoading(false)
     }
