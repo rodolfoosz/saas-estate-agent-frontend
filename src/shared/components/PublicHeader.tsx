@@ -1,18 +1,36 @@
 'use client';
 import Link from 'next/link';
+import { LuMenu, LuUser } from 'react-icons/lu';
 import { useState } from 'react';
+import Image from 'next/image';
 
-export default function PublicHeader() {
+interface PublicHeaderProps {
+  toggleMenu: () => void;
+}
+
+export default function PublicHeader({ toggleMenu }: PublicHeaderProps) {
   const [search, setSearch] = useState('');
 
   return (
-    <header className="w-full bg-white shadow-md px-4 py-3 flex items-center justify-between sticky top-0 z-50">
-      {/* Logo */}
-      <Link href="/" className="text-xl font-bold text-blue-900">
-        Casaé
-      </Link>
+    <header className="w-full bg-white shadow-md px-4 py-3 flex items-center justify-between sticky top-0 z-50 transition-colors duration-300">
+      <div className="flex items-center gap-3">
+        <button
+          onClick={toggleMenu}
+          className="text-xl p-2 rounded"
+        >
+          <LuMenu />
+        </button>
 
-      {/* Campo de busca */}
+        <Link href="/" className="text-xl font-bold text-blue-900">
+          <Image
+            src="/logo-casae-2.png"
+            alt="Logo Casaé"
+            width={80}
+            height={60}
+          />
+        </Link>
+      </div>
+
       <form className="flex-1 mx-4 max-w-md">
         <input
           type="text"
@@ -23,17 +41,14 @@ export default function PublicHeader() {
         />
       </form>
 
-      {/* Ações futuras */}
       <div className="flex gap-4">
-        {/* Redirecionamento para login */}
-        <Link href="/auth/login" className="hidden sm:block text-sm text-gray-700 hover:text-blue-700">
-          Entrar
+        <Link
+          href="/auth/login"
+          className="flex items-center gap-1 text-sm text-gray-700 hover:text-blue-700"
+        >
+          <LuUser className="text-xl" />
+          <span className="hidden sm:inline">Entrar</span>
         </Link>
-
-        {/* Carrinho (reservado para futuro) */}
-        {/* <button className="hidden sm:block opacity-30 cursor-not-allowed" disabled>
-          🛒
-        </button> */}
       </div>
     </header>
   );
