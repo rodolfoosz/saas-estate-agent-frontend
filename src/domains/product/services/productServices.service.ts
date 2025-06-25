@@ -10,3 +10,8 @@ export async function getProductById(id: string): Promise<Product> {
   const response = await api.get(`/products/${id}`)
   return response.data
 }
+
+export async function searchProductsByTerm(term: string): Promise<Product[]> {
+  const response = await api.get(`/products/search?term=${encodeURIComponent(term)}`)
+  return response.data
+}
