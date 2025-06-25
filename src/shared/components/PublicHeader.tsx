@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LuMenu } from 'react-icons/lu';
-import { FaSearch, FaClock } from 'react-icons/fa';
+import { LuMenu, LuClock } from 'react-icons/lu';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useAuthUser } from '@domains/auth/hooks/useAuthUser';
@@ -32,12 +31,20 @@ export default function PublicHeader({ toggleMenu }: PublicHeaderProps) {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const history = localStorage.getItem('searchHistory');
+    if (history) setSearchHistory(JSON.parse(history));
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,15 +53,15 @@ export default function PublicHeader({ toggleMenu }: PublicHeaderProps) {
   };
 
   const handleSelect = (term: string) => {
+    saveToHistory(term);
     setShowDropdown(false);
     setSearch('');
-    if (term && !searchHistory.includes(term)) {
-      setSearchHistory([term, ...searchHistory.slice(0, 4)]); // máximo 5 termos
-    }
   };
 
-  const clearSearchHistory = () => {
-    setSearchHistory([]);
+  const saveToHistory = (term: string) => {
+    const updated = [term, ...searchHistory.filter((t) => t !== term)].slice(0, 5);
+    setSearchHistory(updated);
+    localStorage.setItem('searchHistory', JSON.stringify(updated));
   };
 
   return (
@@ -65,12 +72,7 @@ export default function PublicHeader({ toggleMenu }: PublicHeaderProps) {
         </button>
 
         <Link href="/" className="text-xl font-bold text-blue-900">
-          <Image
-            src="/logo-casae-2.png"
-            alt="Logo Casaé"
-            width={80}
-            height={60}
-          />
+          <Image src="/logo-casae-2.png" alt="Logo Casaé" width={80} height={60} />
         </Link>
       </div>
 
@@ -82,47 +84,35 @@ export default function PublicHeader({ toggleMenu }: PublicHeaderProps) {
           onChange={handleInputChange}
           className="w-full rounded-full border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
-
-        {showDropdown && (results.length > 0 || searchHistory.length > 0) && (
-          <div className="absolute mt-2 w-full bg-white border rounded-2xl shadow-xl z-50 max-h-72 overflow-y-auto text-gray-800">
-            {results.length > 0 && (
-              <>
-                <div className="px-4 py-2 text-sm text-gray-500">Resultados</div>
+        {showDropdown && (
+          <div className="absolute mt-2 w-full bg-white border rounded-xl shadow-xl z-50 max-h-64 overflow-y-auto">
+            {search === '' && searchHistory.length > 0 && (
+              <div className="text-sm text-gray-600">
+                {searchHistory.map((term, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSelect(term)}
+                    className="w-full text-left flex items-center gap-2 px-5 py-3 hover:bg-gray-50 border-b last:border-b-0"
+                  >
+                    <LuClock className="text-gray-400" />
+                    {term}
+                  </button>
+                ))}
+              </div>
+            )}
+            {debouncedSearch && results.length > 0 && (
+              <div className="text-sm text-gray-800">
                 {results.map((item) => (
                   <Link
                     key={item.id}
                     href={`/produtos/${item.id}`}
                     onClick={() => handleSelect(item.title)}
+                    className="block px-5 py-3 hover:bg-gray-50 border-b last:border-b-0"
                   >
-                    <div className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      <FaSearch className="text-gray-400" />
-                      <span>{item.title}</span>
-                    </div>
+                    {item.title}
                   </Link>
                 ))}
-              </>
-            )}
-
-            {searchHistory.length > 0 && (
-              <>
-                <hr className="my-1 border-gray-200" />
-                <div className="px-4 py-2 text-sm text-gray-500 flex justify-between items-center">
-                  Buscas recentes
-                  <button onClick={clearSearchHistory} className="text-xs text-blue-500 hover:underline">
-                    Limpar
-                  </button>
-                </div>
-                {searchHistory.map((term, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setSearch(term)}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    <FaClock className="text-gray-400" />
-                    <span>{term}</span>
-                  </div>
-                ))}
-              </>
+              </div>
             )}
           </div>
         )}
