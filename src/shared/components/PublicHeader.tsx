@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LuMenu, LuClock } from 'react-icons/lu';
+import { LuMenu, LuClock, LuUser } from 'react-icons/lu';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useAuthUser } from '@domains/auth/hooks/useAuthUser';
@@ -129,7 +129,7 @@ export default function PublicHeader({ toggleMenu }: PublicHeaderProps) {
           href="/auth/login"
           className="flex flex-col items-center text-sm text-gray-700 hover:text-gray-700"
         >
-          <LuMenu className="text-xl" />
+          <LuUser className="text-xl" />
           <span className="hidden sm:inline">Entrar</span>
         </Link>
       )}
