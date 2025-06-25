@@ -1,9 +1,7 @@
 'use client'
 
-import DelayedLoader from '@shared/components/DelayedLoader'
 import ProductCard from '../components/ProductCard'
 import { useProducts } from '../hooks/useProducts'
-import { ImSpinner2 } from 'react-icons/im'
 
 export default function ProductFeed() {
   const { products, loading, error } = useProducts()
@@ -11,7 +9,6 @@ export default function ProductFeed() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)] space-y-4">
-        <ImSpinner2 className="animate-spin text-4xl text-gray-600" />
         <p className="text-gray-600 text-lg">Carregando produtos...</p>
       </div>
     )
