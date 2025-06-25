@@ -13,7 +13,6 @@ export default function ProductFeed() {
       <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)] space-y-4">
         <ImSpinner2 className="animate-spin text-4xl text-gray-600" />
         <p className="text-gray-600 text-lg">Carregando produtos...</p>
-        <DelayedLoader loading={loading} />
       </div>
     )
   }
