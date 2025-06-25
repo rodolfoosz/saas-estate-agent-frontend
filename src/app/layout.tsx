@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { FeedbackProvider } from "../../context/FeedbackProvider";
 import NavigationLoader from "@shared/components/NavigationLoader";
+import ThemeLayout from "./themes/ThemeLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Casaé",
-  description: "",
+  description: "Gestão Imobiliária Simplificada",
 };
 
 export default function RootLayout({
