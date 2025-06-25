@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { LuMenu, LuUser } from 'react-icons/lu';
 import { useState } from 'react';
 import Image from 'next/image';
+import { useAuthUser } from '@domains/auth/hooks/useAuthUser';
 
 interface PublicHeaderProps {
   toggleMenu: () => void;
@@ -10,6 +11,7 @@ interface PublicHeaderProps {
 
 export default function PublicHeader({ toggleMenu }: PublicHeaderProps) {
   const [search, setSearch] = useState('');
+  const user = useAuthUser();
 
   return (
     <header className="w-full bg-white shadow-md px-4 py-3 flex items-center justify-between sticky top-0 z-50 transition-colors duration-300">
@@ -41,15 +43,16 @@ export default function PublicHeader({ toggleMenu }: PublicHeaderProps) {
         />
       </form>
 
-      <div className="flex gap-4">
-        <Link
-          href="/auth/login"
-          className="flex items-center gap-1 text-sm text-gray-700 hover:text-blue-700"
-        >
-          <LuUser className="text-xl" />
-          <span className="hidden sm:inline">Entrar</span>
-        </Link>
-      </div>
+      <Link href="/auth/login" className="flex flex-col items-center gap-0 text-sm text-gray-700 hover:text-blue-700">
+        <LuUser className="text-xl" />
+        {user ? (
+          <span className="text-xs">{user.fullName.split(' ')[0]}</span>
+        ) : (
+          <span  className="hidden sm:inline">
+            Entrar
+          </span>
+        )}
+      </Link>
     </header>
   );
 }

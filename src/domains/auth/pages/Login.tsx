@@ -31,8 +31,16 @@ export default function Login() {
   const onSubmit = async (data: LoginPayload) => {
     try {
       const response = await loginUser({ email: data.email, password: data.password });
-      localStorage.setItem('token', response.access_token);
-      router.push('/dashboard');
+      if (response) {
+        const user = {
+          id: response.id,
+          email: response.email,
+          fullName: response.name,
+        }
+        localStorage.setItem('token', response.access_token);
+        localStorage.setItem('user', JSON.stringify(user));
+        router.push('/');
+      }
     } catch (err) {
       console.error('Erro ao fazer login:', err);
     }
